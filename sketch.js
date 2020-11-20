@@ -1,3 +1,5 @@
+// Display width and height
+var w,h
 // Height and width of motif
 var a
 // Maximum number of visible motif columns/rows 
@@ -12,8 +14,12 @@ var symm_pick
 var cnv
 // colors
 var clr = []
+// icons
+var n_sym,p_sym,n_mf
 
 function setup() {
+  w=displayWidth;
+  h=displayHeight;
   // color scheme
   clr[0] = color(214,162,173);
   clr[1] = color(195,181,159);
@@ -25,22 +31,23 @@ function setup() {
   cmax=4;
   rmax=12;
   symm_pick = 0;
-  if (displayWidth<displayHeight) {
-    a = round(displayWidth/cmax)/2
-    rmax = round(displayHeight/(2*a))
+  if (w<h) {
+    a = round(w/cmax)/2
+    rmax = round(h/(2*a))
   } else {
-    a = round(displayHeight/rmax)/2
-    cmax = round(displayWidth/(2*a))
+    a = round(h/rmax)/2
+    cmax = round(w/(2*a))
   }
-  cnv = createCanvas(displayWidth,displayHeight);
+  cnv = createCanvas(w,h);
   create_motif();
   noLoop();
   cnv.touchEnded(change_it); 
+  create_icons();
 }
 
 function create_motif() {
   mf = createGraphics(a, a);
-  mf.background(0);
+  mf.background(clr[4]);
   var c = round(random(-0.5,4.5))
   //mf.fill(150, 150)
   //mf.ellipse(a/4, a/6, a/3);
@@ -154,7 +161,7 @@ function create_metamotif() {
   }
 
   mmf = createGraphics(2*a,2*a);
-  mmf.background(0)
+  mmf.background(clr[4])
 
   mmf.image(q1,0,0)
   mmf.image(q2,a,0)
@@ -200,4 +207,48 @@ function draw() {
       image(mmf,c*2*a,r*2*a);
     }    
   }
+  image(n_sym,200,200);
+  image(p_sym,100,200);
+  image(n_mf,150,200);
+}
+
+//Create icons
+
+function create_icons() {
+  //icon size
+  var m,l
+  m=a
+  l=4*a
+
+  //create n_sym
+  n_sym = createGraphics(m,m)
+  n_sym.noFill();
+  n_sym.stroke(0);
+  n_sym.strokeWeight(10);
+  n_sym.strokeCap(ROUND);
+  n_sym.beginShape();
+  n_sym.vertex(m/3, m/4);
+  n_sym.vertex(2*m/3, 2*m/4);
+  n_sym.vertex(m/3,3*m/4);
+  n_sym.endShape();
+
+  //create p_sym
+  p_sym = createGraphics(m,m)
+  p_sym.noFill();
+  p_sym.stroke(0);
+  p_sym.strokeWeight(10);
+  p_sym.strokeCap(ROUND);
+  p_sym.beginShape();
+  p_sym.vertex(2*m/3, m/4);
+  p_sym.vertex(m/3, 2*m/4);
+  p_sym.vertex(2*m/3,3*m/4);
+  p_sym.endShape();
+
+  //create n_mf
+  n_mf = createGraphics(l,l)
+  n_mf.noFill();
+  n_mf.stroke(0);
+  n_mf.strokeWeight(10);
+  n_mf.strokeCap(ROUND);
+  n_mf.ellipse(l/2,l/2,l/2)
 }
